@@ -30,8 +30,15 @@ namespace BidFood.Api.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Person person)
         {
-            var id = await _provider.CreateAsync(person);
-            return CreatedAtRoute("GetPerson", new { id }, person);
+            var personInDb = _provider.GetByName(person.FirstName, person.LastName);
+
+            if (personInDb == null)
+            {
+                var id = await _provider.CreateAsync(person);
+                return CreatedAtRoute("GetPerson", new { id }, person);
+            }
+
+            return BadRequest("Person already exists.");
         }
     }
 }

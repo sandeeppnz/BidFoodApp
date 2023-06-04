@@ -7,33 +7,29 @@ namespace BidFood.Data.Json.Repository
     public class PersonsRepository : IDataProvider<Person>
     {
         private readonly string _collectionName = "people";
-        private readonly IDataStore _store;
+        private readonly IDocumentCollection<Person> _collection;
         public PersonsRepository(IDataStore dataStore)
         {
-            _store = dataStore;
-
-        }
-        private IDocumentCollection<Person> GetCollection()
-        {
-            return _store.GetCollection<Person>(_collectionName);
+        _collection = dataStore.GetCollection<Person>(_collectionName);
         }
 
         public IEnumerable<Person> GetAll()
         {
-            return GetCollection().AsQueryable();
+            return _collection.AsQueryable();
         }
 
         public Person GetById(int id)
         {
-            return GetCollection().AsQueryable().FirstOrDefault(x => x.Id == id);
+            return _collection.AsQueryable().FirstOrDefault(x => x.Id == id);
         }
 
         public async Task<int> CreateAsync(Person entity)
         {
             try
             {
-                int nextId = GetCollection().GetNextIdValue();
-                await GetCollection().InsertOneAsync(entity);
+                int nextId = _collection.GetNextIdValue();
+                entity.Id = ++nextId;
+                await _collection.InsertOneAsync(entity);
                 return nextId;
             }
             catch (Exception ex)
@@ -45,7 +41,7 @@ namespace BidFood.Data.Json.Repository
 
         public IEnumerable<Person> GetByName(string firstName, string lastName)
         {
-            var result = GetCollection().AsQueryable()
+            var result = _collection.AsQueryable()
                 .Where(x => x.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
                             x.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase)
                 );

@@ -1,6 +1,6 @@
 ﻿namespace BidFood.Domain.Interfaces
 {
-    public interface IDataProvider<TEntity>
+    public partial interface IDataProvider<TEntity>
     {
         IEnumerable<TEntity> GetAll();
         TEntity GetById(int id);
