@@ -27,15 +27,14 @@ namespace BidFood.Data.Json.Repository
         {
             try
             {
-                int nextId = _collection.GetNextIdValue();
+                int nextId = _collection.GetNextIdValue(); //initial index is zero
                 entity.Id = ++nextId;
                 await _collection.InsertOneAsync(entity);
                 return nextId;
             }
             catch (Exception ex)
             {
-
-                throw new Exception($"Unable to create a new record, error: {ex.Message}");
+                throw new Exception($"Unable to create a new record, error: {ex.Message}", ex);
             }
         }
 
