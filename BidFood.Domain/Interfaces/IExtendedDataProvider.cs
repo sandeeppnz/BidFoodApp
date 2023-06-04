@@ -2,5 +2,5 @@
 
 public partial interface IDataProvider<TEntity>
 {
-    IEnumerable<TEntity> GetByName(string firstName, string lastName);
+    TEntity GetByName(string firstName, string lastName);
 }

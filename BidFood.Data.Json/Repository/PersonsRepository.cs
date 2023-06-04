@@ -38,12 +38,12 @@ namespace BidFood.Data.Json.Repository
             }
         }
 
-        public IEnumerable<Person> GetByName(string firstName, string lastName)
+        public Person GetByName(string firstName, string lastName)
         {
             var result = _collection.AsQueryable()
                 .Where(x => x.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
                             x.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase)
-                );
+                ).FirstOrDefault();
             return result;
         }
 
